@@ -63,7 +63,7 @@ Run
 ```bash
 python main.py --test --resume 0 --test_dir ${INPUT_PATH}$ --output_dir ${OUTPUT_PATH}$ --name ${EXPERIMENT_NAME}$ --gpu ${GPU_INDEXS}$ -- batch size {BATCH_SIZE}$ 
 ```
-Please note that the metric outputted by test script is under the PyTorch pre-process (resize etc.). It is not precious. Therefore, we need to run the evaluation scipt for further evaluation.
+Please note that the metric outputted by test script is under the PyTorch pre-process (resize etc.). It is not precise. Therefore, we need to run the evaluation scipt for further evaluation.
 ``` bash
 python tools/evaluate.py --test_dir ${OUTPUT_PATH}$ --gt_dir ${GT_PATH}$
 ```
