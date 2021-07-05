@@ -13,6 +13,5 @@ fvcore==0.1.1
 opencv_python==3.4.3.18
 Pillow==8.2.0
 PyYAML==5.4.1
-scikit_learn==0.24.2
 SimpleITK==2.0.2
 skimage==0.0
