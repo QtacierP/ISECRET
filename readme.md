@@ -10,6 +10,7 @@ This is the implementation of the MICCAI 2021 Paper "I-SECRET: Importance-guided
 python tools/degrade_eyeq.py --degrade_dir ${DATA_PATH}$ --output_dir $OUTPUT_PATH$ --mask_dir ${MASK_PATH}$ --gt_dir ${GT_PATH}$.
 ```
 Note that this scipt should be applied for usable dataset for cropping pre-processing.
+
 4. Make the architecture of the EyeQ directory as:
 ```bash
 .
