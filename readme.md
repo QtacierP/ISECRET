@@ -50,7 +50,7 @@ python main.py --model i-secret --lambda_is 1 --lambda_gan 1 --data_root_dir ${D
 
 Run the I-SECRET model 
 ```bash
-python main.py --model i-secret --lambda_is 1 --lambda_icc 1 --lambda_gan 1 --data_root_dir ${DATA_DIR}$ --gpu ${GPU_INDEXS}$ -- batch size {BATCH_SIZE}$  --name i-secret --experiment_root_dir ${LOG_DIR}$
+python main.py --model i-secret --lambda_is 1 --lambda_icc 1 --lambda_gan 1 --data_root_dir ${DATA_DIR}$ --gpu ${GPU_INDEXS}$ --batch_size {BATCH_SIZE}$  --name i-secret --experiment_root_dir ${LOG_DIR}$
 ```
 ## Visualization
 Go to the \${LOG_DIR}\$ / \${EXPERIMENT_NAME}\$ / checkpoint, run
