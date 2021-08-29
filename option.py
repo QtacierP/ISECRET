@@ -62,7 +62,7 @@ train_args.add_argument('--save_freq', type=int, default=10, help='the number of
 train_args.add_argument('--sample_freq', type=int, default=500, help='the number of step for visualizing')
 train_args.add_argument('--no_val', action='store_true', default=False, help='no validation used in training')
 train_args.add_argument('--metric', type=str, default='psnr', help='the validation metric')
-train_args.add_argument('--optim', type=str, default='adabelief', help='Optimizer')
+train_args.add_argument('--optim', type=str, default='adam_belief', help='Optimizer')
 train_args.add_argument('--beta1', type=float, default=0.5, help='beta1 for adam')
 train_args.add_argument('--beta2', type=float, default=0.999, help='beta2 for adam')
 train_args.add_argument('--weight_decay', type=float, default=0.0001, help='weight decay for optim')
