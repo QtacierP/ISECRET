@@ -41,3 +41,7 @@ class Eyeq(BaseDataset):
 
 
 
+@ DATASET_REGISTRY.register('minieyeq')
+class MiniEyeq(Eyeq):
+    def __init__(self, args, task):
+        super().__init__(args, task)
