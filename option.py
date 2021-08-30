@@ -74,6 +74,7 @@ train_args.add_argument('--n_patches', type=int, default=256, help='the f_model 
 train_args.add_argument('--lambda_gan', type=float, default=1.0, help='the weight of the gan-loss')
 train_args.add_argument('--lambda_icc', type=float, default=0.0, help='the weight of the icc-loss')
 train_args.add_argument('--lambda_idt', type=float, default=0.0, help='the weight of the idt-loss')
+train_args.add_argument('--lambda_simsiam', type=float, default=0.0, help='the weight of the simsiam-loss')
 train_args.add_argument('--lambda_ssim', type=float, default=0.0, help='the weight of the ssim-loss')
 train_args.add_argument('--lambda_idt_ssim', type=float, default=0.0, help='the weight of the idt-ssim-loss')
 train_args.add_argument('--lambda_psnr', type=float, default=0.0, help='the weight of the psnr-loss')

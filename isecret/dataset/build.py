@@ -17,6 +17,7 @@ def build_loader(args):
     data_loaders = []
 
     for task in tasks:
+        #print(task)
         dataset = build_dataset(args, task)
         sampler = DistributedSampler(dataset) if args.dist.n_gpus > 1 else None
         shuffle = True if sampler is None else False

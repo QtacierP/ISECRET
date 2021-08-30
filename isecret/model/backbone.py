@@ -399,3 +399,86 @@ class PatchSampleF(nn.Module):
         if weight_map is not None:
             return return_feats, return_ids, return_weight_samples
         return return_feats, return_ids
+
+@ FMODEL_REGISTRY.register('mlp-s')
+class PatchSampleS(nn.Module):
+    def __init__(self, args, gpu_id, init_type='xavier', init_gain=0.02, nc=256):
+        # potential issues: currently, we use the same patch_ids for multiple images in the batch
+        nn.Module.__init__(self)
+        self.args = args
+        self.l2norm = Normalize(2)
+        self.standard = Standardlize()
+        self.use_mlp = not self.args.model.no_mlp
+        self.nc = nc
+        self.mlp_init = False
+        self.init_type = init_type
+        self.init_gain = init_gain
+
+    def create_mlp(self, feats):
+        for mlp_id, feat in enumerate(feats):
+            feat = feat.cpu()
+            input_nc = feat.shape[1]
+            mlp = nn.Sequential(
+                *[nn.Linear(input_nc, self.nc), nn.ReLU(), nn.Linear(self.nc, input_nc)])
+            setattr(self, 'mlp_%d' % mlp_id, mlp)
+        init_net(self, self.init_type, self.init_gain)
+        self.mlp_init = True
+
+    def forward(self, feats, num_patches=64, patch_ids=None, weight_map=None):
+        return_ids = []
+        return_feats = []
+        return_p_feats = []
+        return_weight_samples = []
+        weight_sample = None
+        if self.use_mlp and not self.mlp_init:
+            print('[INFO] Create MLP...')
+            self.create_mlp(feats)
+            self.mlp_init = True
+            return
+        for feat_id, feat in enumerate(feats):
+            B, H, W = feat.shape[0], feat.shape[2], feat.shape[3]
+            feat_reshape = feat.permute(0, 2, 3, 1).flatten(1, 2)
+            if num_patches > 0:
+                if patch_ids is not None:
+                    patch_id = patch_ids[feat_id]
+                else:
+                    patch_id = np.random.permutation(
+                        feat_reshape.shape[1])
+                    # .to(patch_ids.device)
+                    patch_id = patch_id[:int(
+                        min(num_patches, patch_id.shape[0]))]
+                x_sample = feat_reshape[:, patch_id, :].flatten(
+                    0, 1)  # reshape(-1, x.shape[1])
+            else:
+                x_sample = feat_reshape
+                patch_id = []
+            if weight_map is not None:
+                weight_map = F.interpolate(
+                    weight_map, size=(W, H), mode='area')
+                weight_map_reshape = weight_map.permute(
+                    0, 2, 3, 1).flatten(1, 2)
+                weight_map_reshape = self.standard(
+                    torch.exp(weight_map_reshape))
+                weight_sample = weight_map_reshape[:, patch_id, :].flatten(
+                    0, 1)  # reshape(-1, x.shape[1])
+            if self.use_mlp:
+                mlp = getattr(self, 'mlp_%d' % feat_id)
+                p_x_sample = mlp(x_sample)
+
+            return_ids.append(patch_id)
+            x_sample = self.l2norm(x_sample)
+            p_x_sample = self.l2norm(p_x_sample)
+            if num_patches == 0:
+                x_sample = x_sample.permute(0, 2, 1).reshape(
+                    [B, x_sample.shape[-1], H, W])
+                p_x_sample = p_x_sample.permute(0, 2, 1).reshape(
+                    [B, p_x_sample.shape[-1], H, W])
+                weight_sample = weight_sample.permute(0, 2, 1).reshape(
+                    [B, weight_sample.shape[-1], H, W])
+            return_feats.append(x_sample)
+            return_p_feats.append(p_x_sample)
+            if weight_map is not None:
+                return_weight_samples.append(weight_sample)
+        if weight_map is not None:
+            return return_feats, return_p_feats, return_ids, return_weight_samples
+        return return_feats, return_p_feats, return_ids
