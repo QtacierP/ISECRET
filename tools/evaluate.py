@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
 import cv2
-from option import args, post_preprocess_args
 import glob
 import os
 from matplotlib.pyplot import imread
@@ -52,19 +51,19 @@ def ssim(img1, img2):
   return ssim_map.mean()
 
 
-gt_list = sorted(glob.glob(os.path.join(args.overall.gt_dir, '*')))
-image_list = sorted(glob.glob(os.path.join(args.overall.test_dir, '*')))
+gt_list = sorted(glob.glob(os.path.join(args.gt_dir, '*')))
+image_list = sorted(glob.glob(os.path.join(args.test_dir, '*')))
 
 
 def run(source_path, target_path, mask_path=None):
     source = imread(source_path).copy()
-    if mask_path is None:
+    if mask_path is not None:
         mask = imread(mask_path)
         mask = cv2.resize(mask, (512, 512), interpolation=cv2.INTER_NEAREST)
         mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2RGB)
     target = imread(target_path).copy()
     source = cv2.resize(source, (512, 512), interpolation=cv2.INTER_NEAREST)
-    if mask_path is None:
+    if mask_path is  not  None:
         source[mask == 0] = 0  
         target[mask == 0] = 0
     target = cv2.resize(target, (512, 512), interpolation=cv2.INTER_NEAREST)
@@ -78,11 +77,19 @@ result = []
 for image_path in tqdm(image_list):
     try:
         _, image_id = os.path.split(image_path)
-        gt_path = os.path.join(args.overall.gt_dir, image_id)
+        
         if args.mask_dir != '':
             mask_path = os.path.join(args.mask_dir, image_id.split('.')[0] + '_mask.gif')
         else:
             mask_path = None
+        image_id_split = image_id.split('_')[:-1]
+        image_name = ''
+        for idx, word in enumerate(image_id_split):
+            image_name += str(word)
+            if idx != len(image_id_split) - 1:
+                image_name += '_'
+        image_name += '.jpeg'
+        gt_path = os.path.join(args.gt_dir, image_name)
         result.append(pool.apply_async(run, (image_path, gt_path, mask_path)))
     except:
         pass
