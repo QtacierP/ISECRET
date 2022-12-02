@@ -13,7 +13,7 @@ import argparse
 
 args = argparse.ArgumentParser(description='the option of the degradation of EyeQ')
 
-args.add_argument('--degrade_dir', type=str, default='', help='degrade EyeQ dir')
+args.add_argument('--test_dir', type=str, default='', help='degrade EyeQ dir')
 args.add_argument('--gt_dir', type=str, default='', help='high quality cropped image dir')
 args.add_argument('--output_dir', type=str, default='./temp', help='degraded output dir')
 args.add_argument('--mask_dir', type=str, default='./temp', help='mask output dir')
