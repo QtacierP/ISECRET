@@ -2,6 +2,9 @@
 
 This is the implementation of the MICCAI 2021 Paper "I-SECRET: Importance-guided fundus image enhancement via semi-supervised contrastive constraining". 
 
+## News
+New work [LED](https://github.com/QtacierP/LED) is public, which also includes the pre-trained weights of I-SECRET. 03/09/2023
+
 ## Data preparation
 1. Firstly, download EyeQ dataset from [EyeQ](https://github.com/HzFu/EyeQ).
 2. Split the dataset into train/val/test according to the [EyePACS challenge](https://www.kaggle.com/c/diabetic-retinopathy-detection).
