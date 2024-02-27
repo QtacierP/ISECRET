@@ -209,7 +209,7 @@ class ISECRET(MyModel):
         if self.args.train.lambda_is > 0:
             meta['rec_good'], importance_rec = self.b2g_gen(meta['noise_good'], need_importance=True)
             losses['is_loss'] = self.rec_loss(meta['rec_good'], meta['real_good'], importance_rec) * self.args.train.lambda_is
-            meta['importance_rec'] = self._vis_importance(importance_rec)
+            meta['importance_rec'] = self._vis_importance(importance_rec.detach())
         else:
             meta['rec_good'] = self.b2g_gen(meta['noise_good'])
             losses['rec_loss'] = self.rec_loss(meta['rec_good'], meta['real_good']) * self.args.train.lambda_rec
@@ -230,7 +230,7 @@ class ISECRET(MyModel):
         importance_fake = importance_fake.detach()
 
         # Visualize importance map
-        meta['importance_fake'] = self._vis_importance(importance_fake)
+        meta['importance_fake'] = self._vis_importance(importance_fake.detach())
         meta['idt_good'], meta['fake_good'] = fake.chunk(2, dim=0)
 
         # Calculate icc-loss
