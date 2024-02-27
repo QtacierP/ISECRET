@@ -206,6 +206,7 @@ class MyModel(ABC):
                 for tag in meta.keys():
                     img_list = meta[tag]
                     imgs = torch.cat([img_list], dim=0)
+                    imgs = imgs.detach()
                     imgs = make_grid(imgs, nrow=self.args.dist.batch_size_per_gpu)
                     if 'mask' not in tag:
                         imgs = un_norm(imgs)
